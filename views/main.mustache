@@ -33,8 +33,17 @@
           <h5 class="gabble-details">{{ timestamp }}</h5>
 
           <!-- TODO : IF THIS GABBLE HAS NO LIKES, THEN SHOW NO LIKES YET, OTHERWISE SHOW totalLikes  -->
-          <h4 class="gabble-details"><a href="/likes/{{ messageId }}"> Likes: {{ totalLikes }} </a></h4>
-          <h4 class="gabble-details"> Noone has liked this gabble yet. </h4>
+          {{ #likes }}
+            {{ #liked}}
+              <h4 class="gabble-details"><a href="/likes/{{ messageId }}"> Likes: {{ totalLikes }} </a></h4>
+            {{ /liked }}
+          {{ /likes }}
+
+          {{ #likes }}
+            {{ ^liked }}
+              <h4 class="gabble-details"> Noone has liked this gabble yet. </h4>
+            {{ /liked }}
+          {{ /likes }}
 
           <form method="post" action="/like/{{ messageId }}">
             <input type="submit" value="Like" class="like-btn" name="like">

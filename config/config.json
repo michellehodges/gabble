@@ -2,21 +2,21 @@
   "development": {
     "username": "mischy",
     "password": null,
-    "database": "database_development",
+    "database": "gabble_development",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
     "username": "mischy",
     "password": null,
-    "database": "database_test",
+    "database": "gabble_test",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
     "username": "mischy",
     "password": null,
-    "database": "database_production",
+    "database": "gabble_production",
     "host": "127.0.0.1",
     "dialect": "postgres"
   }

@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Mukta+Mahee|Raleway|Titillium+Web" rel="stylesheet">
+  </head>
+  <body>
+    <span><a href="/main"> << Go back to mainpage </a></span>
+
+    <h5>Liked by: </h5>
+    <ul>
+    {{#likers}}
+      <li> {{ username }} </li>
+    {{/likers}}
+    </ul>
+
+    <form method="post" action="/logout">
+    <input type="submit" value="Log out">
+
+  </body>
+</html>
