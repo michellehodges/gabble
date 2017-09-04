@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Mukta+Mahee|Raleway|Titillium+Web" rel="stylesheet">
+  </head>
+  <body>
+    <h1 id="greeting">Welcome back, {{ username }}!</h1>
+
+    <h3 class="subtitles-main"> Create a new gabble </h3>
+    <form method="post" action="/create">
+      <textarea name="body" rows="10" cols="200" placeholder="Type your gabble here..."></textarea><br>
+      <span class="required">{{ needBody }}</span><br>
+      <input type="submit" value="Post your gabble" class="create-btn">
+    </form>
+
+
+    <h3 class="subtitles-main"> Gabbles from your circle </h3>
+    <form method="post" action="/sort">
+      <label for="sort">Sort gabbles by:</label>
+      <select class="ui-dropdown" name="sorttype" id="sort">
+        <option value="datedescending">Newest to oldest</option>
+        <option value="dateascending">Oldest to newest</option>
+      </select>
+      <input type="submit" value="Sort" class="sort-btn">
+    </form>
+    <br>
+    <span id="noresults">{{ noResults }}</span><br>
+    <ul>
+        {{ #gabbles }}
+        <li>
+          <h5 class="gabble-details">{{ owner }} : <span> {{ body }} </span></h5><br>
+          <h5 class="gabble-details">{{ timestamp }}</h5>
+
+          <!-- TODO : IF THIS GABBLE HAS NO LIKES, THEN SHOW NO LIKES YET, OTHERWISE SHOW totalLikes  -->
+          <h4 class="gabble-details"><a href="/likes/{{ messageId }}"> Likes: {{ totalLikes }} </a></h4>
+          <h4 class="gabble-details"> Noone has liked this gabble yet. </h4>
+
+          <form method="post" action="/like/{{ messageId }}">
+            <input type="submit" value="Like" class="like-btn" name="like">
+          </form>
+
+          <!-- TODO : IF THIS GABBLE IS OF YOUR OWN, THEN SHOW DELETE OPTION  -->
+          <form method="post" action="/delete/{{ messageId }}">
+            <input type="submit" value="Delete" class="del-btn" name="del">
+          </form>
+        </li>
+        {{ /gabbles }}
+    </ul>
+
+    <form method="post" action="/logout">
+    <input type="submit" value="Log out">
+
+  </body>
+</html>
