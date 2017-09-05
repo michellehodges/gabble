@@ -115,35 +115,37 @@ User.sync().then(function(){
 
 Message.sync().then(function(){
   console.log('Message models synced')
-  Message.create({
-    id: '4548d4c6-a337-46c2-9f23-459df8e3679b',
-    user_id: '4be57d1e-a310-4bd7-9c85-535531457797',
-    content: 'It is one of those days where all I want is a donut topped with sprinkles.',
-  });
-  Message.create({
-    id: 'd8a7daf7-ed18-4cd8-82fe-b378059b05c9',
-    user_id: 'a36e0e1d-8e74-47cd-977a-deb915e53887',
-    content: 'Gabble is such an awesome app!',
-  });
-  Message.create({
-    id: '5f0c7f0b-2336-4f47-baa9-24d5ad1fdc21',
-    user_id: 'c9ef1aff-cc7e-4f71-8380-e33ff19c13da',
-    content: 'I got my exam back the other day. It was a B. My mom will be angry.',
-  });
-  Message.create({
-    id: '3ac71891-deec-4870-b45d-d1422a479ae5',
-    user_id: 'c9ef1aff-cc7e-4f71-8380-e33ff19c13da',
-    content: 'The government... Sucks.',
-  });
-  Message.create({
-    id: '8eb2e1b7-f81e-4f0d-aba4-ae4aa2121c1c',
-    user_id: '0e3374d2-4b90-4123-bbdc-41245c800215',
-    content: 'Political comment here! Political commment there! Ridiculous!',
-  });
-})
+  // Message.create({
+  //   id: '4548d4c6-a337-46c2-9f23-459df8e3679b',
+  //   user_id: '4be57d1e-a310-4bd7-9c85-535531457797',
+  //   content: 'It is one of those days where all I want is a donut topped with sprinkles.',
+  // });
+  // Message.create({
+  //   id: 'd8a7daf7-ed18-4cd8-82fe-b378059b05c9',
+  //   user_id: 'a36e0e1d-8e74-47cd-977a-deb915e53887',
+  //   content: 'Gabble is such an awesome app!',
+  // });
+  // Message.create({
+  //   id: '5f0c7f0b-2336-4f47-baa9-24d5ad1fdc21',
+  //   user_id: 'c9ef1aff-cc7e-4f71-8380-e33ff19c13da',
+  //   content: 'I got my exam back the other day. It was a B. My mom will be angry.',
+  // });
+  // Message.create({
+  //   id: '3ac71891-deec-4870-b45d-d1422a479ae5',
+  //   user_id: 'c9ef1aff-cc7e-4f71-8380-e33ff19c13da',
+  //   content: 'The government... Sucks.',
+  // });
+  // Message.create({
+  //   id: '8eb2e1b7-f81e-4f0d-aba4-ae4aa2121c1c',
+  //   user_id: '0e3374d2-4b90-4123-bbdc-41245c800215',
+  //   content: 'Political comment here! Political commment there! Ridiculous!',
+  // });
+  // }).catch(function (err) {
+  //   console.log(err);
+});
 
 Like.sync().then(function(){
-  console.log('User models synced')
+  console.log('Like models synced')
   // Like.create({
   //   id: '37519323-dcf9-41f5-9ed4-adc14f12bd62',
   //   user_id: 'a36e0e1d-8e74-47cd-977a-deb915e53887',
