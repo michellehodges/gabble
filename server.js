@@ -103,7 +103,7 @@ Like.associate = function(models) {
   Like.belongsTo(Message, { as: 'message', foreignKey: 'message_id' });
 }
 
-//TODO: How to classify the UUID in this case?
+//TODO: How to classify the UUID in this case? Do I put it in a String?
 User.sync().then(function(){
   console.log('User models synced')
   User.create({
@@ -215,25 +215,23 @@ server.get('/main', function(request, response) {
     response.redirect('/');
   }
 })
+
+server.get('/register', function(request, response) {
+  response.render('register')
+})
+
+server.get('/logout', function(request, response) {
+  response.render('logout')
+})
+
 //
-// server.get('/register', function(request, response) {
-//   response.render('register')
-// })
-//
-// server.get('/logout', function(request, response) {
-//   response.render('logout')
-// })
-//
-// server.get('/api', function(request, response) {
-//   Snippet.find({}, function(err, results){ response.json(results) })
-// })
-//
-// server.get('/snippets/:snippet_id', function(request, response) {
-//   Snippet.find({ _id: request.params.snippet_id }, function(err, results){
-//     response.render('individuals', { snippet: results })
+// server.get('/likes/:user_id', function(request, response) {
+//   Message.find({ _id: request.params.user_id }, function(err, results){
+//     response.render('likes', { liked: results })
 //   })
 // })
 //
+
 // //POST REQUESTS
 server.post('/main', function(request, response) {
   let username = request.body.username;
@@ -256,217 +254,81 @@ server.post('/main', function(request, response) {
     })
   }
 })
-//
-// server.post('/register', function(request, response) {
-//   if (request.body.newUsername !== null && request.body.newPassword !== null) {
-//     User.create({
-//       username: request.body.newUsername,
-//       password: request.body.newPassword
-//     })
-//       .then(function(newUser){
-//         console.log(newUser)
-//       })
-//       .catch(function(err){
-//         console.log(err)
-//       })
-//     }
-//   response.render('success')
-// })
-//
-// server.post('/create', function (request, response) {
-//   console.log(request.body);
-//   if ((request.body.title.length != 0) && (request.body.body.length != 0) && (request.body.language.length != 0) && (request.body.tags.length != 0)) {
-//     Snippet.create({
-//       owner: request.session.who[0].username,
-//       title: request.body.title,
-//       body: request.body.body,
-//       notes: request.body.notes,
-//       language: request.body.language,
-//       tags: request.body.tags.split(',')
-//     })
-//       .then(function(newSnippet){
-//         console.log(newSnippet)
-//       })
-//       .catch(function(err){
-//         console.log(err)
-//       })
-//       response.redirect('/main');
-//   } else if (request.body.title.length === 0) {
-//     response.render('main', { needTitle: "A title is required." });
-//   } else if (request.body.body.length === 0) {
-//     response.render('main', { needBody: "Body to snippet is required." });
-//   } else if (request.body.language.length === 0) {
-//   response.render('main', { needLanguage: "Language is required." });
-//   } else if (request.body.tags.length === 0) {
-//   response.render('main', { needTags: "At least one tag is required." });
-//   }
-// });
-//
-// server.post('/search', function(request, response) {
-//   if (request.body.search === '') {
-//     response.redirect('/main');
-//   } else if (request.body.searchtype === 'username'){
-//     Snippet.find({owner: request.body.search}, function(err, searchResults) {
-//       if (searchResults.length === 0) {
-//         response.render('main', {
-//           noResults: "Sorry, we can't find any snippets that matches your search.",
-//           username: request.session.who[0].username
-//         })
-//       } else {
-//         response.render('main', {
-//           snippets: searchResults,
-//           username: request.session.who[0].username
-//         })
-//       }
-//     })
-//   } else if (request.body.searchtype === 'language'){
-//     Snippet.find({language: request.body.search}, function(err, searchResults) {
-//       if (searchResults.length === 0) {
-//         response.render('main', {
-//           noResults: "Sorry, we can't find any snippets that matches your search.",
-//           username: request.session.who[0].username
-//         })
-//       } else {
-//         response.render('main', {
-//           snippets: searchResults,
-//           username: request.session.who[0].username
-//         })
-//       }
-//     })
-//   } else if (request.body.searchtype === 'tag'){
-//     Snippet.find({tags: request.body.search}, function(err, searchResults) {
-//       if (searchResults.length === 0) {
-//         response.render('main', {
-//           noResults: "Sorry, we can't find any snippets that matches your search.",
-//           username: request.session.who[0].username
-//         })
-//       } else {
-//         response.render('main', {
-//           snippets: searchResults,
-//           username: request.session.who[0].username
-//         })
-//       }
-//     })
-//   } else {
-//     response.render('main', {
-//       noResults: "Sorry, we can't find any snippets that matches your search."
-//     })
-//   }
-// })
-//
-// server.post('/filter', function(request, response) {
-//   if (request.body.filtertype === 'all') {
-//     Snippet.find({}, function(err, results) {
-//       if (results.length === 0) {
-//         response.render('main', {
-//           noResults: "Sorry, we can't find any snippets that matches your search.",
-//           username: request.session.who[0].username
-//         })
-//       } else {
-//         response.render('main', {
-//           snippets: results,
-//           username: request.session.who[0].username,
-//           })
-//       }
-//     })
-//   } else if (request.body.filtertype === 'mine') {
-//     Snippet.find({owner: request.session.who[0].username}, function(err, results){
-//       if (results.length === 0) {
-//         response.render('main', {
-//           noResults: "Sorry, we can't find any snippets that matches your search.",
-//           username: request.session.who[0].username
-//         })
-//       } else {
-//         response.render('main', {
-//           snippets: results,
-//           username: request.session.who[0].username,
-//           })
-//       }
-//     })
-//   } else if (request.body.filtertype === 'friends') {
-//     Snippet.find({owner: {$nin: request.session.who[0].username}}, function(err, results){
-//       if (results.length === 0) {
-//         response.render('main', {
-//           noResults: "Sorry, we can't find any snippets that matches your search.",
-//           username: request.session.who[0].username
-//         })
-//       } else {
-//         response.render('main', {
-//           snippets: results,
-//           username: request.session.who[0].username,
-//           })
-//       }
-//     })
-//   } else if (request.body.filtertype === 'favorited') {
-//     Snippet.find({favorites: !null }, function(err, results) {
-//       if (results.length === 0) {
-//         response.render('main', {
-//           noResults: "Sorry, we can't find any snippets that matches your search.",
-//           username: request.session.who[0].username
-//         })
-//       } else {
-//         response.render('main', {
-//           snippets: results,
-//           username: request.session.who[0].username,
-//           })
-//       }
-//     })
-//   }
-// })
-//
-// server.post('/sort', function(request, response) {
-//   if (request.body.sorttype === 'dateascending') {
-//   Snippet.find().sort({timestamp: -1}).then(function(results) {
-//     response.render('main', {
-//       snippets: results,
-//       username: request.session.who[0].username,
-//       })
-//     })
-//   } else if (request.body.sorttype === 'datedescending') {
-//   Snippet.find().sort({timestamp: 1}).then(function(results) {
-//     response.render('main', {
-//       snippets: results,
-//       username: request.session.who[0].username,
-//       })
-//     })
-//     } else if (request.body.sorttype === 'mostfavorited') {
-//       Snippet.find({}, function(err, results) {
-//         results.sort(function(a,b){
-//           return a.favoritedBy.length < b.favoritedBy.length;
-//         })
-//         response.render('main', {
-//       snippets: results,
-//       username: request.session.who[0].username,
-//       })
-//     })
-//   } else if (request.body.sorttype === 'leastfavorited') {
-//     Snippet.find({}, function(err, results) {
-//       results.sort(function(a,b){
-//         return a.favoritedBy.length > b.favoritedBy.length;
-//       })
-//       response.render('main', {
-//     snippets: results,
-//     username: request.session.who[0].username,
-//     })
-//   })
-// }
-// })
-//
-// server.post('/favorite/:snippet_id', function(request, response) {
-//   Snippet.findOneAndUpdate(
-//     { _id : request.params.snippet_id },
-//     { $push: {favoritedBy: request.session.who[0].username}})
-//     .then(function(results) {
-//         response.redirect('/main')
-//     });
-// })
-//
-// server.post('/logout', function(request, response) {
-//   request.session.destroy(function() {
-//     response.redirect('/logout')
-//   });
-// })
-//
+
+server.post('/register', function(request, response) {
+  let newUsername = request.body.newUsername;
+  let newPassword = request.body.newPassword;
+
+  if (newUsername !== null && newPassword !== null) {
+    User.create({
+      username: newUsername,
+      password: newPassword
+    })
+      .then(function(newUser){
+        console.log(newUser)
+      })
+      .catch(function(err){
+        console.log(err)
+      })
+    }
+  response.render('success')
+})
+
+//TODO: How to add user_id here?
+server.post('/create', function (request, response) {
+  console.log(request.body);
+  if ((request.body.body.length != 0)  {
+    Message.create({
+      user_id: request.session.who[0].username,
+      content: request.body.body,
+    })
+      .then(function(newGabble){
+        console.log(newGabble)
+      })
+      .catch(function(err){
+        console.log(err)
+      })
+      response.redirect('/main');
+  } else if (request.body.body.length === 0) {
+    response.render('main', { needBody: "A gabble is required." });
+  }
+});
+
+server.post('/sort', function(request, response) {
+  if (request.body.sorttype === 'dateascending') {
+  Message.findAll().sort({timestamp: -1}).then(function(results) {
+    response.render('main', {
+      snippets: results,
+      username: request.session.who[0].username,
+      })
+    })
+  } else if (request.body.sorttype === 'datedescending') {
+  Message.findAll().sort({timestamp: 1}).then(function(results) {
+    response.render('main', {
+      gabbles: results,
+      username: request.session.who[0].username,
+      })
+    })
+  }
+})
+
+
+//TODO: How to create the new likes here?
+server.post('/like/:message_id', function(request, response) {
+  Like.create(
+    // { _id : request.params.snippet_id },
+    // { $push: {favoritedBy: request.session.who[0].username}})
+    .then(function(results) {
+        response.redirect('/main')
+    });
+})
+
+server.post('/logout', function(request, response) {
+  request.session.destroy(function() {
+    response.redirect('/logout')
+  });
+})
+
 // //LISTEN TO PORT
 server.listen(3000, function() {
   console.log("Gabble gabble!");

@@ -29,8 +29,8 @@
     <ul>
         {{ #gabbles }}
         <li>
-          <h5 class="gabble-details">{{ owner }} : <span> {{ body }} </span></h5><br>
-          <h5 class="gabble-details">{{ timestamp }}</h5>
+          <h5 class="gabble-details">{{ username }} : <span> {{ content }} </span></h5><br>
+          <h5 class="gabble-details">{{ created_at }}</h5>
 
           <!-- TODO : IF THIS GABBLE HAS NO LIKES, THEN SHOW NO LIKES YET, OTHERWISE SHOW totalLikes  -->
           {{ #likes }}
