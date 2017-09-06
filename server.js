@@ -78,9 +78,9 @@ const Like = db.define('like', {
   }
 })
 
-Message.belongsTo(User, { as: 'username', foreignKey: 'user_id' });
-Like.belongsTo(User, { as: 'username', foreignKey: 'user_id' })
-Like.belongsTo(Message, { as: 'message', foreignKey: 'message_id' });
+Message.belongsTo(User, { foreignKey: 'user_id' });
+Like.belongsTo(User, { foreignKey: 'user_id' })
+Like.belongsTo(Message, { foreignKey: 'message_id' });
 
 User.sync()
   .then(function(){
@@ -181,15 +181,13 @@ server.get('/', function(request, response) {
   response.render('welcome')
 })
 
-
-//TODO: Need to display the correct usernames under Gabbles section.
 server.get('/main', function(request, response) {
   if (request.session.who !== undefined) {
-    Message.findAll()
+    Message.findAll({ include: [User] })
       .then(function(results){
         response.render('main', {
           gabbles: results,
-          username: request.session.who.username,
+          currentUser: request.session.who.username,
           })
       })
   } else {
@@ -269,11 +267,11 @@ server.post('/create', function (request, response) {
       })
       response.redirect('/main');
   } else if (request.body.body.length === 0) {
-      Message.findAll()
+      Message.findAll({ include: [User] })
         .then(function(results){
           response.render('main', {
             gabbles: results,
-            username: request.session.who.username,
+            currentUser: request.session.who.username,
             needBody: "A gabble is required to post."
             })
         })
@@ -282,17 +280,17 @@ server.post('/create', function (request, response) {
 
 server.post('/sort', function(request, response) {
   if (request.body.sorttype === 'dateascending') {
-  Message.findAll({ order: [[ 'createdAt', 'ASC' ]] }).then(function(results) {
+  Message.findAll({ include: [User], order: [[ 'createdAt', 'ASC' ]] }).then(function(results) {
     response.render('main', {
       gabbles: results,
-      username: request.session.who.username,
+      currentUser: request.session.who.username,
       })
     })
   } else if (request.body.sorttype === 'datedescending') {
-  Message.findAll({ order: [[ 'createdAt', 'DESC' ]] }).then(function(results) {
+  Message.findAll({ include: [User], order: [[ 'createdAt', 'DESC' ]] }).then(function(results) {
     response.render('main', {
       gabbles: results,
-      username: request.session.who.username,
+      currentUser: request.session.who.username,
       })
     })
   }
@@ -300,13 +298,20 @@ server.post('/sort', function(request, response) {
 
 
 // //TODO: How to create the new likes here?
-// server.post('/like/:message_id', function(request, response) {
-//   Like.create(
-//     // { user_id: request.session.who[0].user_id })
-//     .then(function(results) {
-//         response.redirect('/main')
-//     });
-// })
+server.post('/like/:message_id', function(request, response) {
+  console.log(request.body.like)
+  Like.create({
+    include: [User, Message],
+    user_id: request.session.who.id,
+    message_id: request.params.message_id
+  })
+    .then(function(results) {
+        response.redirect('/main')
+    });
+})
+
+//TODO: Delete your own likes
+
 
 server.post('/logout', function(request, response) {
   request.session.destroy(function() {

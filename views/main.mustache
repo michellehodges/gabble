@@ -5,7 +5,7 @@
     <link href="https://fonts.googleapis.com/css?family=Mukta+Mahee|Raleway|Titillium+Web" rel="stylesheet">
   </head>
   <body>
-    <h1 id="greeting">Welcome back, {{ username }}!</h1>
+    <h1 id="greeting">Welcome back, {{ currentUser }}!</h1>
 
     <h3 class="subtitles-main"> Create a new gabble </h3>
     <form method="post" action="/create">
@@ -29,13 +29,14 @@
     <ul>
         {{ #gabbles }}
         <li>
-          <h5 class="gabble-details">{{ username }} : <span> {{ content }} </span></h5><br>
+          <h5 class="gabble-details">{{ user.username }} : <span> {{ content }} </span></h5><br>
           <h5 class="gabble-details">{{ createdAt }}</h5>
 
           <!-- TODO : IF THIS GABBLE HAS NO LIKES, THEN SHOW NO LIKES YET, OTHERWISE SHOW totalLikes  -->
           {{ #likes }}
             {{ #liked}}
-              <h4 class="gabble-details"><a href="/likes/{{ messageId }}"> Likes: {{ totalLikes }} </a></h4>
+
+              <h4 class="gabble-details"><a href="/likes/{{ id }}"> Likes: {{ totalLikes }} </a></h4>
             {{ /liked }}
           {{ /likes }}
 
@@ -45,7 +46,7 @@
             {{ /liked }}
           {{ /likes }}
 
-          <form method="post" action="/like/{{ messageId }}">
+          <form method="post" action="/like/{{ id }}">
             <input type="submit" value="Like" class="like-btn" name="like">
           </form>
 
