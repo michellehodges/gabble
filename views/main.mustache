@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Mukta+Mahee|Raleway|Titillium+Web" rel="stylesheet">
   </head>
   <body>
@@ -25,12 +25,12 @@
       <input type="submit" value="Sort" class="sort-btn">
     </form>
     <br>
-    <span id="noresults">{{ noResults }}</span><br>
+    <span id="noresults" class="required">{{ noResults }}</span><br>
     <ul>
         {{ #gabbles }}
         <li>
           <h5 class="gabble-details">{{ username }} : <span> {{ content }} </span></h5><br>
-          <h5 class="gabble-details">{{ created_at }}</h5>
+          <h5 class="gabble-details">{{ createdAt }}</h5>
 
           <!-- TODO : IF THIS GABBLE HAS NO LIKES, THEN SHOW NO LIKES YET, OTHERWISE SHOW totalLikes  -->
           {{ #likes }}
