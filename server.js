@@ -182,7 +182,7 @@ server.get('/', function(request, response) {
 })
 
 
-//TODO: Need to display the correct usernames under Gabble.
+//TODO: Need to display the correct usernames under Gabbles section.
 server.get('/main', function(request, response) {
   if (request.session.who !== undefined) {
     Message.findAll()
@@ -254,25 +254,31 @@ server.post('/register', function(request, response) {
   response.render('success')
 })
 
-//TODO: How to add user_id here?
-// server.post('/create', function (request, response) {
-//   console.log(request.body);
-//   if ((request.body.body.length != 0)  {
-//     Message.create({
-//       user_id: request.session.who[0].user_id,
-//       content: request.body.body,
-//     })
-//       .then(function(newGabble){
-//         console.log(newGabble)
-//       })
-//       .catch(function(err){
-//         console.log(err)
-//       })
-//       response.redirect('/main');
-//   } else if (request.body.body.length === 0) {
-//     response.render('main', { needBody: "A gabble is required." });
-//   }
-// });
+server.post('/create', function (request, response) {
+  console.log(request.body);
+  if (request.body.body.length != 0)  {
+    Message.create({
+      user_id: request.session.who.id,
+      content: request.body.body,
+    })
+      .then(function(newGabble){
+        console.log(newGabble)
+      })
+      .catch(function(err){
+        console.log(err)
+      })
+      response.redirect('/main');
+  } else if (request.body.body.length === 0) {
+      Message.findAll()
+        .then(function(results){
+          response.render('main', {
+            gabbles: results,
+            username: request.session.who.username,
+            needBody: "A gabble is required to post."
+            })
+        })
+    }
+});
 
 server.post('/sort', function(request, response) {
   if (request.body.sorttype === 'dateascending') {
