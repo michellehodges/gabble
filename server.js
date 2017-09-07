@@ -182,8 +182,6 @@ server.get('/', function(request, response) {
   response.render('welcome')
 })
 
-//TODO: show likes.
-
 server.get('/main', function(request, response) {
   if (request.session.who !== undefined) {
     Message.findAll({ include: [User, { model: Like, as: 'likes' }] })
@@ -292,14 +290,22 @@ server.post('/create', function (request, response) {
 
 server.post('/sort', function(request, response) {
   if (request.body.sorttype === 'dateascending') {
-  Message.findAll({ include: [User], order: [[ 'createdAt', 'ASC' ]] }).then(function(results) {
+  Message.findAll({ include: [User, { model: Like, as: 'likes' }], order: [[ 'createdAt', 'ASC' ]] }).then(function(results) {
+    for (let i = 0; i < results.length; i++) {
+      results[i].currentAuthor = results[i].user_id === request.session.who.id;
+      results[i].liked = results[i].likes.length > 0;
+    }
     response.render('main', {
       gabbles: results,
       currentUser: request.session.who.username,
       })
     })
   } else if (request.body.sorttype === 'datedescending') {
-  Message.findAll({ include: [User], order: [[ 'createdAt', 'DESC' ]] }).then(function(results) {
+  Message.findAll({ include: [User, { model: Like, as: 'likes' }], order: [[ 'createdAt', 'DESC' ]] }).then(function(results) {
+    for (let i = 0; i < results.length; i++) {
+      results[i].currentAuthor = results[i].user_id === request.session.who.id;
+      results[i].liked = results[i].likes.length > 0;
+    }
     response.render('main', {
       gabbles: results,
       currentUser: request.session.who.username,
