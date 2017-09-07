@@ -32,28 +32,23 @@
           <h5 class="gabble-details">{{ user.username }} : <span> {{ content }} </span></h5><br>
           <h5 class="gabble-details">{{ createdAt }}</h5>
 
-          <!-- TODO : IF THIS GABBLE HAS NO LIKES, THEN SHOW NO LIKES YET, OTHERWISE SHOW totalLikes  -->
-          {{ #likes }}
             {{ #liked}}
-
-              <h4 class="gabble-details"><a href="/likes/{{ id }}"> Likes: {{ totalLikes }} </a></h4>
+              <h4 class="gabble-details"><a href="/likes/{{ id }}"> Likes: {{ likes.length }} </a></h4>
             {{ /liked }}
-          {{ /likes }}
 
-          {{ #likes }}
             {{ ^liked }}
               <h4 class="gabble-details"> Noone has liked this gabble yet. </h4>
             {{ /liked }}
-          {{ /likes }}
 
           <form method="post" action="/like/{{ id }}">
             <input type="submit" value="Like" class="like-btn" name="like">
           </form>
 
-          <!-- TODO : IF THIS GABBLE IS OF YOUR OWN, THEN SHOW DELETE OPTION  -->
-          <form method="post" action="/delete/{{ messageId }}">
+          {{ #currentAuthor }}
+          <form method="post" action="/delete/{{ id }}">
             <input type="submit" value="Delete" class="del-btn" name="del">
           </form>
+          {{ /currentAuthor }}
         </li>
         {{ /gabbles }}
     </ul>

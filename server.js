@@ -34,12 +34,12 @@ const User = db.define('user', {
     allowNull: false
   },
   username: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(20),
     unique: true,
     allowNull: false
   },
   password: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(20),
     allowNull: false
   }
 })
@@ -56,7 +56,7 @@ const Message = db.define('message', {
     allowNull: false
   },
   content: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(140),
     allowNull: false
   }
 })
@@ -79,6 +79,7 @@ const Like = db.define('like', {
 })
 
 Message.belongsTo(User, { foreignKey: 'user_id' });
+Message.hasMany(Like, { foreignKey: 'message_id', as: 'likes' });
 Like.belongsTo(User, { foreignKey: 'user_id' })
 Like.belongsTo(Message, { foreignKey: 'message_id' });
 
@@ -181,19 +182,27 @@ server.get('/', function(request, response) {
   response.render('welcome')
 })
 
+//TODO: show likes.
+
 server.get('/main', function(request, response) {
   if (request.session.who !== undefined) {
-    Message.findAll({ include: [User] })
+    Message.findAll({ include: [User, { model: Like, as: 'likes' }] })
       .then(function(results){
+        // for every result in results..set a new "currentAuthor" field, which contains a boolean, which is true when the author of the result is the same as the username in session.
+        for (let i = 0; i < results.length; i++) {
+          results[i].currentAuthor = results[i].user_id === request.session.who.id;
+          results[i].liked = results[i].likes.length > 0;
+        }
+
         response.render('main', {
           gabbles: results,
-          currentUser: request.session.who.username,
-          })
-      })
+          currentUser: request.session.who.username
+        });
+      });
   } else {
     response.redirect('/');
   }
-})
+});
 
 server.get('/register', function(request, response) {
   response.render('register')
@@ -204,9 +213,12 @@ server.get('/logout', function(request, response) {
 })
 
 
-server.get('/likes/:user_id', function(request, response) {
-  Message.find({ _id: request.params.user_id }, function(err, results){
-    response.render('likes', { liked: results })
+server.get('/likes/:message_id', function(request, response) {
+  Like.findAll({ where: {message_id: request.params.message_id} , include: [User] })
+    .then(function(likes) {
+      response.render('likes', {
+        likers: likes
+      })
   })
 })
 
@@ -260,12 +272,12 @@ server.post('/create', function (request, response) {
       content: request.body.body,
     })
       .then(function(newGabble){
-        console.log(newGabble)
+        response.redirect('/main');
       })
       .catch(function(err){
         console.log(err)
       })
-      response.redirect('/main');
+
   } else if (request.body.body.length === 0) {
       Message.findAll({ include: [User] })
         .then(function(results){
@@ -296,10 +308,7 @@ server.post('/sort', function(request, response) {
   }
 })
 
-
-// //TODO: How to create the new likes here?
 server.post('/like/:message_id', function(request, response) {
-  console.log(request.body.like)
   Like.create({
     include: [User, Message],
     user_id: request.session.who.id,
@@ -310,7 +319,20 @@ server.post('/like/:message_id', function(request, response) {
     });
 })
 
-//TODO: Delete your own likes
+server.post('/delete/:message_id', function(request, response) {
+  Message.findOne({where : { id: request.params.message_id } })
+    .then(function(message) {
+      //if the session owner id is equals to the message's user_id, then do this function
+      if (request.session.who.id === message.user_id) {
+        Message.destroy({ where: { id: request.params.message_id }})
+          .then(function(results) {
+            response.redirect('/main')
+          });
+      } else {
+        throw 'error';
+      }
+  })
+});
 
 
 server.post('/logout', function(request, response) {
