@@ -279,7 +279,7 @@ server.post('/create', function (request, response) {
         console.log(err)
       })
 
-  } else if (request.body.body.length === 0) {
+  } else if ((request.body.body.length === 0) || (request.body.body.length > 140)) {
       Message.findAll({ include: [User] })
         .then(function(results){
           response.render('main', {
